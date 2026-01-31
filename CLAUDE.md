@@ -82,3 +82,40 @@ Required:
 ## Development Guidelines
 
 - Always use `uv` to run the server, manage all dependencies, and run Python files. Do not use `pip` or `python` directly (use `uv run` instead).
+
+## Testing
+
+### Test Suite Overview
+Comprehensive test suite with 36 tests covering core RAG system components (100% pass rate):
+- **Unit Tests**: CourseSearchTool (16 tests), AIGenerator (10 tests)
+- **Integration Tests**: RAG System orchestration (10 tests)
+- **Coverage**: AIGenerator (100%), Models (100%), Config (100%), CourseSearchTool (68%)
+
+### Running Tests
+```bash
+# Run all tests
+cd backend && uv run pytest tests/ -v
+
+# Run with coverage
+uv run pytest tests/ --cov=. --cov-report=term-missing
+
+# Run specific suite
+uv run pytest tests/unit/test_search_tools.py -v      # CourseSearchTool tests
+uv run pytest tests/unit/test_ai_generator.py -v      # AIGenerator tests
+uv run pytest tests/integration/test_rag_system.py -v # RAG integration tests
+```
+
+### Test Structure
+- `backend/tests/conftest.py` - Core fixtures (test_config, mock objects)
+- `backend/tests/fixtures/` - Reusable test data (courses, mock VectorStore, mock Anthropic API)
+- `backend/tests/unit/` - Unit tests for individual components
+- `backend/tests/integration/` - Integration tests for system orchestration
+
+### When Writing Tests
+- Use existing fixtures from `tests/fixtures/` for consistent test data
+- Mock external dependencies (ChromaDB, Anthropic API) - never test against real services
+- Follow Arrange-Act-Assert pattern
+- Test both happy paths and error cases
+
+### Detailed Documentation
+See `backend/tests/README.md` for comprehensive testing guide, fixture reference, and examples.
