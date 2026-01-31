@@ -1,24 +1,26 @@
 """Integration tests for RAG System"""
+
+from unittest.mock import MagicMock, Mock, patch
+
 import pytest
-from unittest.mock import Mock, MagicMock, patch
-from rag_system import RAGSystem
 from models import Source
+from rag_system import RAGSystem
 
 
 class TestRAGSystem:
     """Test RAG System integration"""
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_rag_system_initialization(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test RAGSystem component setup"""
         # Create RAG system
@@ -26,17 +28,15 @@ class TestRAGSystem:
 
         # Verify all components initialized
         mock_doc_processor_cls.assert_called_once_with(
-            test_config.CHUNK_SIZE,
-            test_config.CHUNK_OVERLAP
+            test_config.CHUNK_SIZE, test_config.CHUNK_OVERLAP
         )
         mock_vector_store_cls.assert_called_once_with(
             test_config.CHROMA_PATH,
             test_config.EMBEDDING_MODEL,
-            test_config.MAX_RESULTS
+            test_config.MAX_RESULTS,
         )
         mock_ai_generator_cls.assert_called_once_with(
-            test_config.ANTHROPIC_API_KEY,
-            test_config.ANTHROPIC_MODEL
+            test_config.ANTHROPIC_API_KEY, test_config.ANTHROPIC_MODEL
         )
         mock_session_manager_cls.assert_called_once_with(test_config.MAX_HISTORY)
 
@@ -45,17 +45,17 @@ class TestRAGSystem:
         assert "search_course_content" in rag.tool_manager.tools
         assert "get_course_outline" in rag.tool_manager.tools
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_without_session(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test basic query without session"""
         rag = RAGSystem(test_config)
@@ -82,17 +82,17 @@ class TestRAGSystem:
         assert call_kwargs["tools"] is not None
         assert call_kwargs["tool_manager"] is not None
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_with_new_session(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test query with new session"""
         rag = RAGSystem(test_config)
@@ -115,19 +115,21 @@ class TestRAGSystem:
         mock_session.get_conversation_history.assert_called_once_with("session_123")
 
         # Verify exchange was added
-        mock_session.add_exchange.assert_called_once_with("session_123", "Test", "Answer")
+        mock_session.add_exchange.assert_called_once_with(
+            "session_123", "Test", "Answer"
+        )
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_with_existing_session(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test query with existing conversation history"""
         rag = RAGSystem(test_config)
@@ -151,10 +153,10 @@ class TestRAGSystem:
         call_kwargs = mock_ai.generate_response.call_args.kwargs
         assert call_kwargs["conversation_history"] == history
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_sources_retrieval(
         self,
         mock_session_manager_cls,
@@ -162,7 +164,7 @@ class TestRAGSystem:
         mock_vector_store_cls,
         mock_doc_processor_cls,
         test_config,
-        sample_sources
+        sample_sources,
     ):
         """Test source tracking and retrieval"""
         rag = RAGSystem(test_config)
@@ -186,17 +188,17 @@ class TestRAGSystem:
         # Verify sources reset after retrieval
         rag.tool_manager.reset_sources.assert_called_once()
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_tool_integration(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test that tools are properly integrated"""
         rag = RAGSystem(test_config)
@@ -224,17 +226,17 @@ class TestRAGSystem:
         assert "search_course_content" in tool_names
         assert "get_course_outline" in tool_names
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_prompt_construction(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test prompt format passed to AI"""
         rag = RAGSystem(test_config)
@@ -255,17 +257,17 @@ class TestRAGSystem:
         assert "Answer this question about course materials:" in prompt
         assert "What is unit testing?" in prompt
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_history_updates(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test session history is updated after query"""
         rag = RAGSystem(test_config)
@@ -286,15 +288,13 @@ class TestRAGSystem:
 
         # Verify session was updated with exchange
         mock_session.add_exchange.assert_called_once_with(
-            "sess_1",
-            "What is the answer?",
-            "The answer is 42"
+            "sess_1", "What is the answer?", "The answer is 42"
         )
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_query_orchestration_flow(
         self,
         mock_session_manager_cls,
@@ -302,7 +302,7 @@ class TestRAGSystem:
         mock_vector_store_cls,
         mock_doc_processor_cls,
         test_config,
-        sample_sources
+        sample_sources,
     ):
         """Test end-to-end query orchestration"""
         rag = RAGSystem(test_config)
@@ -320,8 +320,7 @@ class TestRAGSystem:
 
         # Execute full flow
         response, sources = rag.query(
-            query="Complex question",
-            session_id="session_999"
+            query="Complex question", session_id="session_999"
         )
 
         # Verify orchestration steps in order:
@@ -342,26 +341,24 @@ class TestRAGSystem:
 
         # 4. History updated
         mock_session.add_exchange.assert_called_with(
-            "session_999",
-            "Complex question",
-            "Final answer"
+            "session_999", "Complex question", "Final answer"
         )
 
         # 5. Response and sources returned
         assert response == "Final answer"
         assert sources == sample_sources
 
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.SessionManager')
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.SessionManager")
     def test_tool_manager_registration(
         self,
         mock_session_manager_cls,
         mock_ai_generator_cls,
         mock_vector_store_cls,
         mock_doc_processor_cls,
-        test_config
+        test_config,
     ):
         """Test all tools are properly registered"""
         rag = RAGSystem(test_config)

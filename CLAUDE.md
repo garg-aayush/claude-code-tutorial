@@ -83,6 +83,27 @@ Required:
 
 - Always use `uv` to run the server, manage all dependencies, and run Python files. Do not use `pip` or `python` directly (use `uv run` instead).
 
+### Code Quality Tools
+
+The project includes automated code quality tools:
+
+**Formatting:**
+- `./scripts/format.sh` - Auto-format code with black and isort
+- Run before committing to ensure consistent formatting
+
+**Linting:**
+- `./scripts/lint.sh` - Check code quality (black, isort, flake8)
+- `./scripts/type-check.sh` - Run type checking with mypy (optional)
+- `./scripts/check.sh` - Complete checks (linting + tests)
+
+**Configuration:**
+- Black: 88 char lines, Python 3.13
+- isort: Black-compatible profile
+- flake8: PEP 8 compliance with black compatibility
+- mypy: Optional type checking (lenient settings)
+
+See `scripts/README.md` for detailed usage.
+
 ## Testing
 
 ### Test Suite Overview

@@ -1,7 +1,9 @@
 """Fixtures for Anthropic API mocking"""
+
+from unittest.mock import MagicMock, Mock
+
 import pytest
-from unittest.mock import Mock, MagicMock
-from anthropic.types import Message, ContentBlock, TextBlock, ToolUseBlock
+from anthropic.types import ContentBlock, Message, TextBlock, ToolUseBlock
 
 
 @pytest.fixture
@@ -39,7 +41,7 @@ def anthropic_tool_use_response():
     tool_use_block.name = "search_course_content"
     tool_use_block.input = {
         "query": "unit testing",
-        "course_name": "Python Testing Course"
+        "course_name": "Python Testing Course",
     }
 
     mock_response.content = [tool_use_block]
@@ -72,7 +74,7 @@ def anthropic_tool_use_response_round2():
     tool_use_block.name = "search_course_content"
     tool_use_block.input = {
         "query": "Python testing frameworks",
-        "course_name": "Advanced Python Course"
+        "course_name": "Advanced Python Course",
     }
 
     mock_response.content = [tool_use_block]
@@ -80,7 +82,11 @@ def anthropic_tool_use_response_round2():
 
 
 @pytest.fixture
-def mock_ai_generator_with_responses(mock_anthropic_client, anthropic_tool_use_response, anthropic_final_response_after_tool):
+def mock_ai_generator_with_responses(
+    mock_anthropic_client,
+    anthropic_tool_use_response,
+    anthropic_final_response_after_tool,
+):
     """Create a mock AIGenerator simulating full tool use flow"""
     from ai_generator import AIGenerator
 
@@ -90,7 +96,7 @@ def mock_ai_generator_with_responses(mock_anthropic_client, anthropic_tool_use_r
     # Simulate two-step flow: tool request, then final response
     mock_anthropic_client.messages.create.side_effect = [
         anthropic_tool_use_response,
-        anthropic_final_response_after_tool
+        anthropic_final_response_after_tool,
     ]
 
     return generator

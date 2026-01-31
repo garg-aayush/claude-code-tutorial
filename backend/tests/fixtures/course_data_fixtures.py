@@ -1,6 +1,7 @@
 """Fixtures for course data and test samples"""
+
 import pytest
-from models import Course, Lesson, CourseChunk, Source
+from models import Course, CourseChunk, Lesson, Source
 
 
 @pytest.fixture
@@ -9,7 +10,7 @@ def sample_lesson():
     return Lesson(
         lesson_number=1,
         title="Introduction to Testing",
-        lesson_link="https://example.com/course/lesson1"
+        lesson_link="https://example.com/course/lesson1",
     )
 
 
@@ -20,18 +21,18 @@ def sample_lessons():
         Lesson(
             lesson_number=1,
             title="Introduction to Testing",
-            lesson_link="https://example.com/course/lesson1"
+            lesson_link="https://example.com/course/lesson1",
         ),
         Lesson(
             lesson_number=2,
             title="Unit Testing Basics",
-            lesson_link="https://example.com/course/lesson2"
+            lesson_link="https://example.com/course/lesson2",
         ),
         Lesson(
             lesson_number=3,
             title="Integration Testing",
-            lesson_link="https://example.com/course/lesson3"
-        )
+            lesson_link="https://example.com/course/lesson3",
+        ),
     ]
 
 
@@ -42,7 +43,7 @@ def sample_course(sample_lessons):
         title="Python Testing Course",
         course_link="https://example.com/course",
         instructor="Test Instructor",
-        lessons=sample_lessons
+        lessons=sample_lessons,
     )
 
 
@@ -53,7 +54,7 @@ def course_without_lessons():
         title="Empty Course",
         course_link="https://example.com/empty",
         instructor="Test Instructor",
-        lessons=[]
+        lessons=[],
     )
 
 
@@ -65,20 +66,20 @@ def sample_course_chunks():
             content="This is the first chunk of content about testing basics.",
             course_title="Python Testing Course",
             lesson_number=1,
-            chunk_index=0
+            chunk_index=0,
         ),
         CourseChunk(
             content="This is the second chunk covering unit test fundamentals.",
             course_title="Python Testing Course",
             lesson_number=1,
-            chunk_index=1
+            chunk_index=1,
         ),
         CourseChunk(
             content="Integration testing requires multiple components working together.",
             course_title="Python Testing Course",
             lesson_number=2,
-            chunk_index=0
-        )
+            chunk_index=0,
+        ),
     ]
 
 
@@ -109,12 +110,12 @@ def sample_sources():
     return [
         Source(
             text="Python Testing Course - Lesson 1",
-            url="https://example.com/course/lesson1"
+            url="https://example.com/course/lesson1",
         ),
         Source(
             text="Python Testing Course - Lesson 2",
-            url="https://example.com/course/lesson2"
-        )
+            url="https://example.com/course/lesson2",
+        ),
     ]
 
 
@@ -127,17 +128,33 @@ def multiple_courses():
             course_link="https://example.com/python",
             instructor="Test Instructor",
             lessons=[
-                Lesson(lesson_number=1, title="Intro", lesson_link="https://example.com/python/1"),
-                Lesson(lesson_number=2, title="Advanced", lesson_link="https://example.com/python/2")
-            ]
+                Lesson(
+                    lesson_number=1,
+                    title="Intro",
+                    lesson_link="https://example.com/python/1",
+                ),
+                Lesson(
+                    lesson_number=2,
+                    title="Advanced",
+                    lesson_link="https://example.com/python/2",
+                ),
+            ],
         ),
         Course(
             title="MCP Introduction",
             course_link="https://example.com/mcp",
             instructor="MCP Instructor",
             lessons=[
-                Lesson(lesson_number=1, title="Getting Started", lesson_link="https://example.com/mcp/1"),
-                Lesson(lesson_number=2, title="Deep Dive", lesson_link="https://example.com/mcp/2")
-            ]
-        )
+                Lesson(
+                    lesson_number=1,
+                    title="Getting Started",
+                    lesson_link="https://example.com/mcp/1",
+                ),
+                Lesson(
+                    lesson_number=2,
+                    title="Deep Dive",
+                    lesson_link="https://example.com/mcp/2",
+                ),
+            ],
+        ),
     ]
