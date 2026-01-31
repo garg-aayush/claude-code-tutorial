@@ -1,6 +1,8 @@
 """Fixtures for vector store mocking"""
+
+from unittest.mock import MagicMock, Mock
+
 import pytest
-from unittest.mock import Mock, MagicMock
 from vector_store import SearchResults
 
 
@@ -19,37 +21,37 @@ def sample_search_results():
         documents=[
             "This is content from Python Testing Course about unit testing.",
             "This covers integration testing fundamentals.",
-            "Advanced testing patterns and best practices."
+            "Advanced testing patterns and best practices.",
         ],
         metadata=[
-            {"course_title": "Python Testing Course", "lesson_number": 1, "chunk_index": 0},
-            {"course_title": "Python Testing Course", "lesson_number": 2, "chunk_index": 0},
-            {"course_title": "MCP Introduction", "lesson_number": 1, "chunk_index": 0}
+            {
+                "course_title": "Python Testing Course",
+                "lesson_number": 1,
+                "chunk_index": 0,
+            },
+            {
+                "course_title": "Python Testing Course",
+                "lesson_number": 2,
+                "chunk_index": 0,
+            },
+            {"course_title": "MCP Introduction", "lesson_number": 1, "chunk_index": 0},
         ],
         distances=[0.2, 0.3, 0.4],
-        error=None
+        error=None,
     )
 
 
 @pytest.fixture
 def empty_search_results():
     """Create empty SearchResults"""
-    return SearchResults(
-        documents=[],
-        metadata=[],
-        distances=[],
-        error=None
-    )
+    return SearchResults(documents=[], metadata=[], distances=[], error=None)
 
 
 @pytest.fixture
 def error_search_results():
     """Create SearchResults with error"""
     return SearchResults(
-        documents=[],
-        metadata=[],
-        distances=[],
-        error="Database connection failed"
+        documents=[], metadata=[], distances=[], error="Database connection failed"
     )
 
 
@@ -63,7 +65,9 @@ def mock_vector_store():
     mock_store.add_course_metadata = Mock()
     mock_store.add_course_content = Mock()
     mock_store.get_course_count = Mock(return_value=2)
-    mock_store.get_existing_course_titles = Mock(return_value=["Python Testing Course", "MCP Introduction"])
+    mock_store.get_existing_course_titles = Mock(
+        return_value=["Python Testing Course", "MCP Introduction"]
+    )
     mock_store.clear_all_data = Mock()
 
     # Mock the collections

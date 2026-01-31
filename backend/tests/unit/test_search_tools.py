@@ -1,9 +1,11 @@
 """Unit tests for CourseSearchTool"""
-import pytest
+
 from unittest.mock import Mock
+
+import pytest
+from models import Source
 from search_tools import CourseSearchTool, ToolManager
 from vector_store import SearchResults
-from models import Source
 
 
 class TestCourseSearchTool:
@@ -20,7 +22,9 @@ class TestCourseSearchTool:
         assert "lesson_number" in definition["input_schema"]["properties"]
         assert definition["input_schema"]["required"] == ["query"]
 
-    def test_execute_successful_search_no_filters(self, mock_vector_store, sample_search_results):
+    def test_execute_successful_search_no_filters(
+        self, mock_vector_store, sample_search_results
+    ):
         """Test basic search without filters"""
         mock_vector_store.search.return_value = sample_search_results
         tool = CourseSearchTool(mock_vector_store)
@@ -29,9 +33,7 @@ class TestCourseSearchTool:
 
         # Verify search was called correctly
         mock_vector_store.search.assert_called_once_with(
-            query="test query",
-            course_name=None,
-            lesson_number=None
+            query="test query", course_name=None, lesson_number=None
         )
 
         # Verify formatted results contain course titles
@@ -42,7 +44,9 @@ class TestCourseSearchTool:
         assert len(tool.last_sources) == 3
         assert isinstance(tool.last_sources[0], Source)
 
-    def test_execute_with_course_name_filter(self, mock_vector_store, sample_search_results):
+    def test_execute_with_course_name_filter(
+        self, mock_vector_store, sample_search_results
+    ):
         """Test search with course name filter"""
         mock_vector_store.search.return_value = sample_search_results
         tool = CourseSearchTool(mock_vector_store)
@@ -51,14 +55,14 @@ class TestCourseSearchTool:
 
         # Verify filter applied to search
         mock_vector_store.search.assert_called_once_with(
-            query="test query",
-            course_name="MCP",
-            lesson_number=None
+            query="test query", course_name="MCP", lesson_number=None
         )
 
         assert result is not None
 
-    def test_execute_with_lesson_number_filter(self, mock_vector_store, sample_search_results):
+    def test_execute_with_lesson_number_filter(
+        self, mock_vector_store, sample_search_results
+    ):
         """Test search with lesson number filter"""
         mock_vector_store.search.return_value = sample_search_results
         tool = CourseSearchTool(mock_vector_store)
@@ -67,35 +71,33 @@ class TestCourseSearchTool:
 
         # Verify filter applied
         mock_vector_store.search.assert_called_once_with(
-            query="test query",
-            course_name=None,
-            lesson_number=2
+            query="test query", course_name=None, lesson_number=2
         )
 
         # Verify lesson number appears in source text
         assert "Lesson 2" in result
 
-    def test_execute_with_combined_filters(self, mock_vector_store, sample_search_results):
+    def test_execute_with_combined_filters(
+        self, mock_vector_store, sample_search_results
+    ):
         """Test search with both course name and lesson number filters"""
         mock_vector_store.search.return_value = sample_search_results
         tool = CourseSearchTool(mock_vector_store)
 
         result = tool.execute(
-            query="test query",
-            course_name="Python Testing Course",
-            lesson_number=1
+            query="test query", course_name="Python Testing Course", lesson_number=1
         )
 
         # Verify both filters passed to search
         mock_vector_store.search.assert_called_once_with(
-            query="test query",
-            course_name="Python Testing Course",
-            lesson_number=1
+            query="test query", course_name="Python Testing Course", lesson_number=1
         )
 
         assert result is not None
 
-    def test_execute_empty_results_no_filters(self, mock_vector_store, empty_search_results):
+    def test_execute_empty_results_no_filters(
+        self, mock_vector_store, empty_search_results
+    ):
         """Test handling of empty results without filters"""
         mock_vector_store.search.return_value = empty_search_results
         tool = CourseSearchTool(mock_vector_store)
@@ -104,15 +106,15 @@ class TestCourseSearchTool:
 
         assert result == "No relevant content found."
 
-    def test_execute_empty_results_with_filters(self, mock_vector_store, empty_search_results):
+    def test_execute_empty_results_with_filters(
+        self, mock_vector_store, empty_search_results
+    ):
         """Test handling of empty results with filters"""
         mock_vector_store.search.return_value = empty_search_results
         tool = CourseSearchTool(mock_vector_store)
 
         result = tool.execute(
-            query="test query",
-            course_name="Nonexistent Course",
-            lesson_number=5
+            query="test query", course_name="Nonexistent Course", lesson_number=5
         )
 
         assert "No relevant content found" in result
@@ -128,11 +130,13 @@ class TestCourseSearchTool:
 
         assert result == "Database connection failed"
 
-    def test_format_results_creates_sources(self, mock_vector_store, sample_search_results):
+    def test_format_results_creates_sources(
+        self, mock_vector_store, sample_search_results
+    ):
         """Test that _format_results creates proper Source objects"""
         tool = CourseSearchTool(mock_vector_store)
 
-        formatted = tool._format_results(sample_search_results)
+        _formatted = tool._format_results(sample_search_results)
 
         # Check sources were created
         assert len(tool.last_sources) == 3

@@ -1,15 +1,17 @@
 """Central fixture definitions for test suite"""
-import pytest
-import tempfile
+
 import shutil
+import tempfile
 from pathlib import Path
-from unittest.mock import Mock, MagicMock
+from unittest.mock import MagicMock, Mock
+
+import pytest
 from config import Config
+from tests.fixtures.anthropic_fixtures import *
 
 # Import fixtures from fixture modules
 from tests.fixtures.course_data_fixtures import *
 from tests.fixtures.vector_store_fixtures import *
-from tests.fixtures.anthropic_fixtures import *
 
 
 @pytest.fixture
