@@ -3,6 +3,7 @@
 ## Overview
 
 Comprehensive test suite for the Course Materials RAG System covering:
+- **API Endpoints**: HTTP endpoint tests for FastAPI routes
 - **CourseSearchTool**: Unit tests for search functionality
 - **AIGenerator**: Unit tests for Claude API integration
 - **RAG System**: Integration tests for system orchestration
@@ -17,9 +18,17 @@ uv run pytest tests/ -v
 
 ### Run Specific Test File
 ```bash
+uv run pytest tests/api/test_endpoints.py -v
 uv run pytest tests/unit/test_search_tools.py -v
 uv run pytest tests/unit/test_ai_generator.py -v
 uv run pytest tests/integration/test_rag_system.py -v
+```
+
+### Run by Marker
+```bash
+uv run pytest -m api -v           # API tests only
+uv run pytest -m unit -v          # Unit tests only
+uv run pytest -m integration -v   # Integration tests only
 ```
 
 ### Run with Coverage
@@ -36,11 +45,14 @@ uv run pytest tests/unit/test_search_tools.py::TestCourseSearchTool::test_execut
 
 ```
 tests/
-├── conftest.py                          # Core fixtures
+├── conftest.py                          # Core fixtures (test_config, mock_rag_system, test_app, test_client)
 ├── fixtures/
 │   ├── course_data_fixtures.py         # Sample courses and data
 │   ├── vector_store_fixtures.py        # Mock VectorStore
 │   └── anthropic_fixtures.py           # Mock Anthropic API
+├── api/
+│   ├── test_endpoints.py               # API endpoint tests (POST /api/query, GET /api/courses)
+│   └── README.md                        # API testing documentation
 ├── unit/
 │   ├── test_search_tools.py            # CourseSearchTool tests
 │   └── test_ai_generator.py            # AIGenerator tests
@@ -75,7 +87,34 @@ tests/
 - `temp_dir()` - Temporary directory
 - `mock_embedding_function()` - Mock embedding
 
+### API Test Fixtures
+- `mock_rag_system()` - Mock RAG system with pre-configured responses
+- `test_app()` - Test FastAPI application without static file mounting
+- `test_client()` - TestClient instance for HTTP requests
+
 ## Test Categories
+
+### API Tests (24 tests)
+
+Tests for FastAPI HTTP endpoints:
+- POST /api/query endpoint (11 tests)
+  - Session management
+  - Request validation
+  - Response structure
+  - Error handling
+  - Edge cases (special characters, long text)
+- GET /api/courses endpoint (6 tests)
+  - Course statistics retrieval
+  - Empty results
+  - Error handling
+- API Integration (5 tests)
+  - Multi-endpoint workflows
+  - CORS configuration
+  - Concurrent requests
+- Request/Response Validation (2 tests)
+  - Pydantic model validation
+
+See `tests/api/README.md` for detailed API testing documentation.
 
 ### Unit Tests: CourseSearchTool (16 tests)
 
